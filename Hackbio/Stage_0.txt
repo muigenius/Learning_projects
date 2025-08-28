@@ -1,0 +1,57 @@
+Project 1
+
+#Printing my name
+echo "Muyideen Sadibo"
+
+#Creating a directory on my name
+mkdir Muyideen_Sadibo
+
+#Creating another directory titled 'biocomputing' and changing to the directory
+mkdir biocomputing && cd biocomputing/
+
+#downloading three files using the wget command
+wget https://raw.githubusercontent.com/josoga2/dataset-repos/main/wildtype.fna
+wget https://raw.githubusercontent.com/josoga2/dataset-repos/main/wildtype.gbk
+wget https://raw.githubusercontent.com/josoga2/dataset-repos/main/wildtype.gbk
+
+ls -lh #to check information about the files
+
+#moving the '.fna' file to Muyideen_Sadibo folder
+mv wildtype.fna ../Muyideen_Sadibo
+
+#Deleting the duplicate '.gbk' file
+rm wildtype.gbk
+ls #check if the duplicate was removed successfuly
+
+#confirming if the '.fna' file is a mutant or wild type. The presence of 'tatatata' sequence signifies mutant type while 'tata' sequence signifies the wild or normal type.
+#it must also be confirmed that both types of sequence are not present in the '.fna' file
+cd ../Muyideen_Sadibo #navigating to the directory where the '.fna' file was moved to.
+ls #to be certain the file is present
+
+grep "tatatata" wildtype.fna
+grep "tata" wildtype.fna
+
+grep -E "tatatata|tata" wildtype.fna
+grep -e "tatatata" -e "tata" wildtype.fna
+
+
+#printing all matching lines into a new file because its a mutant
+grep "tatatata" wildtype.fna > mutant_wildtype.txt
+cat mutant_wildtype.txt #checking the matching lines in the new file
+
+#counting the number of lines (excluding the header) in the '.gbk'
+#These files have a standardized structure. The header section typically contains information like LOCUS, DEFINITION, ACCESSION, and FEATURES. The sequence data itself is usually found after a line that begins with ORIGIN
+#The most reliable way is to find the start of the sequence and then count the lines
+cd ../biocomputing/ #going to the directory
+
+sed -n '/ORIGIN/' | wc -l wildtype.gbk
+
+#Printing the sequence length of the .gbk file using the LOCUS tag in the first line
+head -n 1 your_file.gbk | grep -oP '\d+(?= bp)'
+
+#This next method works because the LOCUS line always starts with the word "LOCUS", and the third word is the sequence length.
+awk 'NR==1 {print $3; exit}' your_file.gbk
+
+#printing the source organism of the wildtype.gbk file using the 'SOURCE' tag in the first line.
+grep "SOURCE" your_file.gbk | cut -c 13-
+
