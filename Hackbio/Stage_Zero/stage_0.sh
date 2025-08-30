@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # Project 1: Bash Basic
 
 #--STEP 1: Printing my name
@@ -75,6 +76,8 @@ ls ../Muyideen_sadibo/
 
 echo "Files in biocomputing/:"
 ls .
+
+
 
 
 # Project 2: Installing Bioinformatics Software on the Terminal
