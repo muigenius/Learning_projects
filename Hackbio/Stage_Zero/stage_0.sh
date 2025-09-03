@@ -40,6 +40,16 @@ ls #to be certain the file is present
 grep "tatatata" wildtype.fna
 grep "tata" wildtype.fna
 
+if grep -q "tatatata" wildtype.fna; then
+    echo "Mutant sequence 'tatatata' found."
+elif grep -q "tata" wildtype.fna; then
+    echo "Wildtype sequence 'tata' found."
+elif grep -e "tatatata" -e "tata" wildtype.fna
+    echo "Wildtype sequence 'tata' found."
+else
+    echo "Neither 'tatatata' nor 'tata' found."
+fi
+
 grep -E "tatatata|tata" wildtype.fna
 grep -e "tatatata" -e "tata" wildtype.fna
 
@@ -53,13 +63,15 @@ cat mutant_wildtype.txt #checking the matching lines in the new file
 #The most reliable way is to find the start of the sequence and then count the lines
 cd ../biocomputing/ #going to the directory
 
-sed -n '/ORIGIN/' | wc -l wildtype.gbk
+awk '/ORIGIN/{p=1;next} p' wildtype.gbk | wc -l
 
 #--STEP 10: Printing the sequence length of the .gbk file using the LOCUS tag in the first line
 grep "^LOCUS" wildtype.gbk | awk '{print $3}'
 
 #--STEP 11: printing the source organism of the wildtype.gbk file using the 'SOURCE' tag in the first line.
 grep "SOURCE" wildtype.gbk | cut -c 13-
+
+grep "SOURCE" wildtype.gbk | awk '{$1=""; print $0}' | sed 's/^ *//' #this line does it better and more reliable
 
 #--STEP 12: listing all gene names in .gbk file
 echo "Gene names in wildtype.gbk:"
